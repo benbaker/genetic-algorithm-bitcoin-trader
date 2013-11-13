@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<title>Bitcoin Genetic AI Trade Book Report</title>
+		<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+		<script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+		<script language="javascript" type="text/javascript" src="/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var dt;
+			$(document).ready(function() {
+				dt = $('#dtable').dataTable({
+					"sScrollY": "600px",
+					"bPaginate":false,
+					"bProcessing": true,
+					"aaSorting": [[18,'desc']]
+				});
+
+
+				/* Add events */
+				$('#dtable tbody tr').live('click', function () {
+					var nTds = $('td', this);
+					var sType = $(nTds[24]).text();
+					sType = sType.replace(/^\s+|\s+$/g, '');
+					if (sType == 'bid')
+					{
+						var sOID = $(nTds[13]).text();
+					}
+					else
+					{
+						var sOID = $(nTds[14]).text();
+					}
+					/* Filter any whitespace chars */
+					dt.fnFilter( sOID.replace(/^\s+|\s+$/g, ''));
+				});
+
+
+				$('#dtable_filter').click(function(){
+					$('.dataTables_filter :input').val('');
+					dt.fnFilter('');
+				});
+			} );
+		</script>
+
+		<style type="text/css"> 
+
+		#info {
+		font-size:0.8em;
+		position:absolute;
+		top:60px;
+		left:50px;
+		width:800px;
+		}
+
+		#orders {
+		font-size:0.6em;
+		position:absolute;
+		top:120px;
+		left:50px;
+		width:1400px;
+		}
+
+		#placeholder {
+		font-size:0.90em;
+		}
+
+		#placeholder .button {
+		position: absolute;
+		cursor: pointer;
+		}
+
+		#placeholder div.button {
+		font-size:0.90em;
+		color: #000000;
+		background-color: #aa7777;
+		padding: 2px;
+		}
+
+		.message {
+		padding-left: 50px;
+		font-size: smaller;
+		}
+
+		table.imgtbl th 
+		{
+			background:#080808 url('/img/th.png');
+			border-width: 1px;
+			padding: 8px;
+			border-style: solid;
+			border-color: #999999;
+			font-size:0.90em;
+		}
+
+		table.imgtbl tr.odd
+		{
+			background:#080808 url('/img/tr2.png');
+			border-width: 1px;
+			padding: 8px;
+			border-style: solid;
+			border-color: #999999;
+		}
+
+
+		table.imgtbl td.z
+		{
+			background:#080808 url('/img/tr2.png');
+			border-width: 1px;
+			padding: 8px;
+			border-style: solid;
+			border-color: #999999;
+		}
+
+		table.imgtbl td.r 
+		{
+			background:#080808 url('/img/r.png');
+			border-width: 1px;
+			padding: 1px;
+			border-style: solid;
+			border-color: #999999;
+			font-size:0.7em;
+		}
+		table.imgtbl td.y 
+		{
+			background:#080808 url('/img/y.png');
+			border-width: 1px;
+			padding: 1px;
+			border-style: solid;
+			border-color: #999999;
+			font-size:0.7em;
+		}
+		table.imgtbl td.g
+		{
+			background:#080808 url('/img/g.png');
+			border-width: 1px;
+			padding: 1px;
+			border-style: solid;
+			border-color: #999999;
+			font-size:1em;
+		}
+		table.imgtbl td.o
+		{
+			background:#080808 url('/img/o.png');
+			border-width: 1px;
+			padding: 1px;
+			border-style: solid;
+			border-color: #999999;
+			font-size:1em;
+		}
+		table.imgtbl td.b
+		{
+			background:#000000 url('/img/b.png');
+			border-width: 1px;
+			padding: 1px;
+			border-style: solid;
+			border-color: #999999;
+			font-size:0.7em;
+		}
+
+		body
+		{
+		font-size:1.00em;
+		background-color:#202020;
+		color: #bfbfbf;
+		}
+
+		p
+		{
+		font-size:1.00em;
+		background-color:#080808;
+		color: #bfbfbf;
+		}
+
+		</style>
+
+
+
+
+	</head>
+
+<body>
+<p><b>Bitcoin Genetic AI Trade Book Report</b>
+|| <a href="../">System Monitor</a> 
+|| <a href="book.html">Order Book</a>
+|| <a href="gene_visualizer.html">Gene Visualizer</a> || Quartile Reports
+: <a href="chart_test_1.html">1</a> | <a href="chart_test_zoom_1.html">1 latest</a>
+| <a href="chart_test_2.html">2</a> | <a href="chart_test_zoom_2.html">2 latest</a>
+| <a href="chart_test_3.html">3</a> | <a href="chart_test_zoom_3.html">3 latest</a>
+| <a href="chart_test_4.html">4</a> | <a href="chart_test_zoom_4.html">4 latest</a>
+</p>
+<div id="info">
+{INFO}
+</div>
+
+<div id="orders">
+Click on any column name to sort. Click again to reverse the sort. The default sort is 'priority' in descending order.<br>
+Click on any record to filter by the order id (used to match bid/ask orders). Clear the filter by clicking the search textbox.<br>
+<br><br>
+The state of the order can be found in the 'book' column.<br>
+ * Open - Live bid or ask order on MtGox<br>
+ * Held - The buy (bid) order has been filled. A sell (ask) order is pending until the commit price is met<br>
+ * Closed:Commit - Commit price has been met for the filled buy (bid) order. A sell (ask) order has been issued.<br>
+ * Sold - The ask order has been filled.<br>
+<br>
+Commissions are not reported separately. However, sell (ask) order amounts are adjusted to take the then current commission rate into account.<br>
+The trade_id (tid) column can be used to link the API orders, reported here, to the account history available for download from MtGox.<br>
+{ORDER_TABLE}
+</div>
+
+</body>
+</html>

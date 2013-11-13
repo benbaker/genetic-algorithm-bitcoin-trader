@@ -1,0 +1,726 @@
+<link rel="stylesheet" href="/css/d3.parcoords.css" type="text/css" />
+<link rel="stylesheet" href="/css/ui.css" type="text/css" />
+<link rel="stylesheet" href="/css/custom-goy/jquery-ui-1.9.2.custom.css" title="default" id="SS" type="text/css"/>
+
+<script src="/socket.io/socket.io.js"></script>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="/js/knockout-2.1.0.js"></script>
+<script language="javascript" type="text/javascript" src="/js/knockout.mapping-latest.js"></script>
+<script language="javascript" type="text/javascript" src="/js/d3.v2.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/d3.parcoords.js"></script>
+
+<script language="javascript" type="text/javascript" src="/js/jquery-1.8.3.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.flot.resize.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.min.js"></script>
+
+<script language="javascript" type="text/javascript" src="/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.dataTables.min.js"></script>
+
+<script language="javascript" type="text/javascript" src="/jslib/pcf2.js"></script>
+<script language="javascript" type="text/javascript" src="/jslib/gene_db.js"></script>
+
+<script>
+  $(document).ready(function() {
+	$("#tabs").tabs();
+	$("#tabs").tabs({ show: { effect: "slide", duration: 900 } });
+
+	//$('#SS').attr('href',"/css/custom-goy/jquery-ui-1.9.2.custom.css");
+    $('#spinner').hide();
+	$('#dbstats').hide();
+	$('#explorer').hide();
+	$('#overlay').hide();
+
+	$('#overlay_back_button').button();
+	$('#overlay_back_button').click(function(){$('#overlay').toggle();}); // Add a click handler
+	$('#calc_button').button();
+	$('#gene_db_reload_button').button();
+
+	//fire off an initial db info request
+	requestDBLibInfo();
+
+	//load the about page
+	$('#about').load('about.html');
+
+  });
+
+var gene_db_view_model = "None";
+var gdbl = new gene_db_lib();
+var debug;
+</script>
+
+<body>
+<div class='ui-overlay' id='overlay'><input type='button' id='overlay_back_button' value='<< Back'><br><div id='overlay_content' class='ui-overlay-content'>OVERLAY</div></div>
+<div id="tabs">
+    <ul>
+        <li><a href="#tab-1"><span>Targets</span></a></li>
+        <li><a href="#tab-3"><span>Market Depth</span></a></li>
+        <li><a href="#tab-4"><span>DB Explorer</span></a></li>
+        <li><a href="#tab-5"><span>Calc</span></a></li>
+        <li><a href="#tab-6"><span>Feed</span></a></li>
+        <li><a href="#tab-7"><span>Server</span></a></li>
+        <li><a href="#tab-8"><span>Clients</span></a></li>
+        <li><a href="#tab-9"><span>Debug</span></a></li>
+        <li><a href="#tab-10"><span>About</span></a></li>
+    </ul>
+    <div id="tab-1">
+	<div id="dbinfo">dbinfo goes here</div>
+    </div>
+    <div id="tab-3">
+	<div id='gox' style="display:block;">
+		<div id="gox_group">
+			<div id="depth_plot_l" style="width:350;display:inline-block;vertical-align: top;padding: 3px;">
+				<h3>MtGox Live Feed</h3><br>
+				<div id="trades" style="width:100%;"></div>
+				<div id="ticker" style="width:100%;"></div>
+				<div id="depth" style="width:100%;"></div>
+			</div>
+			<div id="depth_plot_r" style="width:300;display:inline-block;vertical-align: top;padding: 3px;">
+				<h3>1min Weighted Sales</h3>
+				<table id="1min_table" style="font-size: 14px;">
+					<thead>
+						<tr class='ui-state-default'>
+						<th>Time</th>
+						<th>Price</th>
+						<th>Volume</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr></tr>
+					</tbody>
+				</table>			
+			</div>
+		</div>
+		<h2>MtGox Price Spread</h2>
+		<div>
+			<div id="depth-slider-vertical" style="height:38%;float: left;"></div>
+			<div id="depth_plot" style="width:97%;height:40%;float: right;"></div>
+			<div class="clear"></div>
+		</div>
+		<div id="depth-slider-horizontal" style="width:95%;float: right;"></div>
+	</div>
+    </div>
+    <div id="tab-4">
+	<input type="submit" value="Load DB Library" id="gene_db_reload_button" class="ui-button-text">
+	<br>
+	<br>
+	<div id="explorer"></div>
+	<div id="dbstats"></div>
+	<div id="pchart"></div>
+    </div>
+    <div id="tab-5">
+	<div id="gene_def_calc"><h3>gene data definition calculator</h3><BR>
+	<label  class="ui-input-label-text">BITS</label><input type="text" value="8" id="bits"><br><br>
+	<label class="ui-input-label-text">DECIMAL</label><input type="text" value="2" id="decimal"><br><br>
+	<label class="ui-input-label-text">OFFSET</label><input type="text" value="10" id="offset"><br><br>
+	<label class="ui-input-label-text">MULTIPLIER</label><input type="text" value="1" id="multiplier"><br><br>
+	<input type="submit" value="Calculate" id="calc_button"><br><br>
+	<span id="calc_result"></span>
+	</div>
+    </div>
+    <div id="tab-6">
+	<div id="mtgox_feed">
+
+<div data-bind="foreach: gene_db_lib_entries, visible: gene_db_lib_entries().length > 0">
+    <li>
+        <div data-bind="value: gene_def_hash"></div>
+    </li> 
+</div>
+
+
+	</div>
+    </div>
+    <div id="tab-7">
+	<div id="gene_server_metrics">gene_server_metrics</div>
+    </div>
+    <div id="tab-8">
+	<div id="pids"></div>
+    </div>
+    <div id="tab-9">
+	<span id="debug">debug area</span>
+    </div>
+    <div id="tab-10">
+	<span id="about">about area</span>
+    </div>
+
+</div>
+
+<div id="notifications">
+<label id="logo" class="ui-highlight-text">GA-BITBOT</label>
+<label id="connection_status" class="ui-error-text">disconnected</label><img id="spinner" src='/img/spinner.gif'>
+</div>
+</body>
+<script>
+	var ch_depth = '24e67e0d-1cad-4cc0-9e7a-f8523ef460fe';
+	var ch_trades = 'dbf1dee9-4f2e-4a08-8cb7-748919a71b21';
+	var ch_ticker = 'd5f06780-30a8-4a48-a2f8-7ed181b4a13f';
+	var bid_depth = {};
+	var ask_depth = {};
+	var gene_db = {};
+	var gene_db_data_array = new Array();
+	var pc;	//parrallel coord chart object
+	var spread = 0.05;//0.01625;
+	var depth_max_volume = 100;//0.01625;
+	var plot_x_center = 2.0;
+	var conn = io.connect(window.location.hostname + ':8088/ga_bitbot');
+
+
+	//helper functions for flot time series formating
+	function pctFormatter(v, axis) {return v.toFixed(axis.tickDecimals) +"%";}
+	function dollarFormatter(v, axis) {return "$" + v.toFixed(axis.tickDecimals);}
+
+	// setup market depth plot
+	var options = {
+		series: { shadowSize: 0 },
+		yaxis: { min: 0.01, max: depth_max_volume, color: "#c2d98f" },
+		xaxis: { show: true, color: "#c2d98f" },
+		grid : { backgroundColor: "#242423"} 
+	};
+	
+	var plot = $.plot($("#depth_plot"), [ [0,0] ], options);
+
+	function rebuildDepthPlot(){plot = $.plot($("#depth_plot"), [ [0,0] ], options);}
+
+	function getDepth(depth_dict,center_price,center_spread) {
+		var res = [];
+		for (key in depth_dict){
+			if(depth_dict.hasOwnProperty(key)){
+				if ( (parseFloat(key) > center_price * (1 - center_spread)))
+				{
+					if ( (parseFloat(key) < center_price * (1 + center_spread)))
+					{
+						res.push([parseFloat(key), parseFloat(depth_dict[key])])
+					}
+				}
+			}
+		}
+        	return res;
+	}
+
+	// setup vertical slider
+	$("#depth-slider-vertical").slider({
+		orientation: "vertical",
+		range: "min",
+		min: 50,
+		max: 5000,
+		value: 100,
+		slide: function( event, ui ) { depth_max_volume = ui.value;options.yaxis.max = depth_max_volume;rebuildDepthPlot();}
+	});
+
+	// setup vertical slider
+	$("#depth-slider-horizontal").slider({
+		range: "min",
+		min: 1,
+		max: 100,
+		value: spread * 100,
+		slide: function( event, ui ) { spread = ui.value / 100.0;}
+	});
+
+	conn.on('connect',    onConnect);
+	conn.on('disconnect', onDisconnect);
+	conn.on('error',      onError);
+	conn.on('message',    onMessage);
+
+	function onConnect(msg)
+	{
+		if (this.socket.connected) {
+			$('#connection_status').html('Connected');
+			$('#connection_status').removeClass("ui-error-text").addClass("ui-input-label-text");
+		}
+	}
+	function onError(msg)
+	{
+		$('#connection_status').html(conn.result);
+		$('#connection_status').removeClass("ui-input-label-text").addClass("ui-error-text");
+	}
+	function onDisconnect(msg)
+	{
+		$('#connection_status').html('Disconnected');
+		$('#connection_status').removeClass("ui-input-label-text").addClass("ui-error-text");
+	}
+	function onMessage(msg)
+	{
+		if (msg.channel == 'full_ask'){ask_depth = msg.depth;}
+		if (msg.channel == 'full_bid'){bid_depth = msg.depth;}
+		if (msg.channel == '1min')
+		{
+			t = new Date(msg.time).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+			$('#1min_table > tbody > tr:first').before('<tr><td>'+ t +'</td><td>'+msg.price.toFixed(4)+'</td><td>'+msg.volume.toFixed(4)+'</td></tr>');
+			if ($("#1min_table tr").length > 6){
+				$('#1min_table tr:last').remove();
+			}
+		}
+		if (msg.channel == 'gene_db'){set_gene_db(msg.value);}
+		if (msg.channel == 'gene_db_stripped'){ set_gene_db_info(msg.value);}
+		if (msg.channel == 'gene_server_metrics'){set_gene_server_metrics(msg.value);}
+		if (msg.channel == 'gene_data')
+		{
+            $('#spinner').hide();
+            if (msg.value == null){//provide warning of null response
+                $('#overlay_content').html('<h2>Gene Link</h2><br><br>Warning: Query returned no data.<br><br>')
+                $('#overlay_content').append('Verify redis is installed and running, restart bid_maker.py and try again after a few minutes.');
+                $('#overlay').show();
+            }
+            else{
+			    debug = [];
+			    var axis_data = {};
+			    var selected_axis;
+			    //clear the overlay content container
+			    $('#overlay_content').html('<h2>Gene Link</h2>');
+                var gd = JSON.parse(msg.value)['content'];
+                var meta_gd = JSON.parse(msg.value)['metacontent'];
+                var format;
+			    for (var series in gd){
+				    if (gd[series].length > 1){
+                        if (meta_gd[series].hasOwnProperty('selected_axis')){
+                            selected_axis = meta_gd[series]['selected_axis'];
+                        } else {
+					        //find the min max of each series to determine which axis it should belong to
+					        selected_axis = gd[series].reduce(function(max, arr) {return max >= arr[1] ? max : arr[1];}, -Infinity);
+				            selected_axis = parseInt((selected_axis / 10.0).toFixed(0));
+                        }
+                        //bug fix for issue 58 - add one to the selected axis (flot throws an exception if axis is set to 0)
+                        selected_axis += 1;
+				        //debug.push({ data: gd[series], label: series, yaxis: selected_axis ,lines: {show: true,fill: false,steps: true}});	
+				        if (axis_data[selected_axis] == undefined){axis_data[selected_axis] = [];}
+                        format = { data: gd[series], label: series, yaxis: selected_axis ,lines: {show: true,fill: false,steps: true}};
+                        $.extend(true,format, meta_gd[series]);
+				        //debug.push(format);
+				        axis_data[selected_axis].push(format);
+                    }
+			    }
+
+			    //plot each axis in its own chart
+			    for (selected_axis in axis_data){
+				    var chart_height;
+				    if (selected_axis === 77){chart_height='45%'; }else if (axis_data[selected_axis].length > 2){chart_height='45%';}else{chart_height='15%';}
+				    $('#overlay_content').append('<div id="glc_'+selected_axis+'" style="width:98%;height:'+chart_height+';font-size:1.30em;"></div>')
+                    try{
+                        
+				        $.plot($('#glc_' + selected_axis),axis_data[selected_axis],
+					        { 
+						        series: { shadowSize: 0 },
+						        yaxis: { color: "#c2d98f",zoomRange: [0.1, 10], panRange: [null, null]},
+						        xaxis: { mode: 'time', show: true, zoomRange: [1, 2], panRange: [null,null],color: "#c2d98f" },
+						        grid : { backgroundColor: "#242423"},
+                                //zoom: {interactive: true},
+						        pan: {interactive: true},
+						        autoHighlight: true,
+                                legend: { position: 'sw' },
+		            				mouseActiveRadius: 3
+					        }
+				        );
+                    }
+                    catch(e){
+                        $('#glc_' + selected_axis).html('#glc_' + selected_axis + ' exception caught:' + e + '<br>');
+                        $('#glc_' + selected_axis).append(JSON.stringify(axis_data[selected_axis]));
+
+                    }
+                    $('#glc_' + selected_axis + ' div.legend table').css("border", "1px solid #333333");
+                    $('#glc_' + selected_axis + ' div.legend table').css("background", "#000000")
+			    };
+			
+			    //$('#overlay_content').html(msg.value);
+			    $('#overlay').show();
+            }
+		}		
+		if (msg.channel == 'pids')
+		{
+			$('#pids').html('<a class="help" href="http://google.com"></a><h2>Client Connections</h2><br><table id="clients"></table>');
+			var aa = []
+			for (key in msg.value){
+				//console.log(key);
+				if(msg.value[key].hasOwnProperty('msg_buffer'))
+				{
+					var array = [];
+					try{
+						last_msg = JSON.parse(msg.value[key]['msg_buffer'][0]);
+						if (last_msg != undefined){
+							if (last_msg['channel']=='gts_metric'){
+								array.push(key);
+								array.push(last_msg['gps'].toFixed(3));
+								array.push(last_msg['kss'].toFixed(0));
+								array.push(last_msg['pool']);
+								array.push(last_msg['total']);
+								aa.push(array);
+							}
+						}
+					}catch(err){};
+				}
+
+			}
+
+			var cl = $('#clients').dataTable({
+				"bJQueryUI": true,
+				"bPagination": false,
+				"bLengthChange": false,
+				"bFilter": false,
+				"bInfo": false,
+				"iDisplayLength": 100,
+				"aaData": aa,
+				"aoColumns": [
+					{ "sTitle": "PID","sWidth": 320},
+					{ "sTitle": "Genes/Sec"},
+					{ "sTitle": "KSamples/Sec"},
+					{ "sTitle": "Pool Size", "sClass": "center"},
+					{ "sTitle": "Total Processed", "sClass": "center"}
+				]
+			}); 
+		}
+
+		if (msg.channel == ch_depth)
+		{
+			var p_depth = parseFloat(parseFloat(msg.depth.price).toFixed(2));
+			if (msg.depth.type_str == 'bid')
+			{
+				bid_depth[p_depth] = parseFloat(msg.depth.total_volume_int) / 100000000.0;
+				ask_depth[p_depth] = 0.0;
+			}
+			if (msg.depth.type_str == 'ask')
+			{
+				ask_depth[p_depth] = parseFloat(msg.depth.total_volume_int) / 100000000.0;
+				bid_depth[p_depth] = 0.0;
+			}
+			$('#depth').html($(document.createElement("label")).html('Depth').addClass('ui-input-label-text'));
+			$('#depth').append(' ' + msg.depth.type_str + ': $'+ parseFloat(msg.depth.price).toFixed(3) + "  amount " + parseFloat(msg.depth.volume).toFixed(3) + '<br><br>');
+		}
+
+		if (msg.channel == ch_trades)
+		{
+			if (msg.trade.price_currency == 'USD'){
+				$('#trades').html($(document.createElement("label")).html('Trade').addClass('ui-input-label-text'));
+				$('#trades').append(' price: ' + msg.trade.price + '  amount: ' + msg.trade.amount + '<br><br>');
+				//$('#debug').append(JSON.stringify(msg) + '<BR>');
+			}
+		}
+
+		if (msg.channel == ch_ticker)
+		{
+			plot_x_center = msg.ticker.buy.value;
+			$('#ticker').html($(document.createElement("label")).html('Ticker').addClass('ui-input-label-text'));
+			$('#ticker').append(' buy: ' + msg.ticker.buy.display +'  sell: ' + msg.ticker.sell.display + '<br><br>');
+		}
+
+	}
+
+	function set_gene_server_metrics(gene_server_metrics)
+	{
+		var latency = gene_server_metrics.server_latency;
+		delete gene_server_metrics.server_latency;
+
+		$('#gene_server_metrics').html('<a class="help" href="http://google.com"></a><h2>Gene Server Performance</h2>&nbsp&nbsp&nbspServer latency: '+latency.toFixed(0)+' msec<br><table id="gsp"></table>');
+
+		var aa = [];
+		for (var funct_name in gene_server_metrics){
+			var array = [];
+			array.push(funct_name);
+			array.push(((gene_server_metrics[funct_name]['total_time'] / gene_server_metrics[funct_name]['calls']) * 1000).toFixed(5));
+			array.push(gene_server_metrics[funct_name]['total_time'].toFixed(3));
+			array.push(gene_server_metrics[funct_name]['calls']);
+			aa.push(array);
+		}
+
+		var dt = $('#gsp').dataTable({
+			"bJQueryUI": true,
+			"bPagination": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bInfo": false,
+			"iDisplayLength": 100,
+			"aaData": aa,
+			"aoColumns": [
+				{ "sTitle": "Function","sWidth": 320},
+				{ "sTitle": "Avg Time (ms)"},
+				{ "sTitle": "Total Time (s)"},
+				//{ "sTitle": "active_quartile", "sClass": "center" },
+				{ "sTitle": "Calls", "sClass": "center"}
+			]
+		}); 
+
+
+	}
+		
+
+	function set_gene_db_info(gdb_info)
+	{
+		//load the db info into the db info container
+		$('#dbinfo').html('<a class="help" href="http://google.com"></a><h2>Bid Maker</h2><br><table id="dt"></table>');
+
+		var aa = [];
+		var gene_link_list = [];
+		for (var db_lib in gdb_info){
+			if (db_lib != '0db45d2a4141101bdfe48e3314cfbca3'){
+				var array = [];
+				var a_gene_link = ''
+				
+				target = JSON.parse(gdb_info[db_lib]['g_trgt']);
+				array.push(gdb_info[db_lib]['trade_priority']);
+				array.push(gdb_info[db_lib]['gene_def_hash'].slice(0,6));
+				try{
+					a_gene_link = gdb_info[db_lib]['gene_def_hash']+'_'+target['gene_id'];
+					gene_link_list.push(a_gene_link);
+					//array.push('<a id="'+a_gene_link+'" + href="/gene_link/'+ a_gene_link +'">'+target['gene_id'].slice(0,6)+'</a>');
+					array.push('<input type="submit" id="'+a_gene_link+'" value="'+target['gene_id'].slice(0,6)+'">');
+				}
+				catch(err)
+					{array.push("NA")
+				};
+				array.push(gdb_info[db_lib]['trade_enabled']);
+				array.push(gdb_info[db_lib]['g_active_quartile']);
+				try{array.push(target['score'].toFixed(0));}catch(err){array.push(0)};
+				try{array.push(target['buy'].toFixed(3));}catch(err){array.push(0)};
+				try{array.push(target['target'].toFixed(3));}catch(err){array.push(0)};
+				ts = new Date(target['bid_maker_time_stamp'] * 1000);
+				ts = ts.toTimeString();
+				try{array.push(array.push(ts));}catch(err){array.push(0)};
+				
+				aa.push(array);
+			}
+		}
+
+		var dt = $('#dt').dataTable({
+			"bJQueryUI": true,
+			"bPagination": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bInfo": false,
+			"iDisplayLength": 100,
+			"aaData": aa,
+			"aoColumns": [
+				{ "sTitle": "Trade Priority"},
+				{ "sTitle": "Gene Def Hash"},
+				{ "sTitle": "Gene Link"},
+				//{ "sTitle": "active_quartile", "sClass": "center" },
+				{ "sTitle": "Trade Enabled"},
+				{ "sTitle": "Active Quartile"},
+				{ "sTitle": "Score"},
+				{ "sTitle": "Buy","sWidth": 40},
+				{ "sTitle": "Target","sWidth": 40},
+				{ "sTitle": "As of","sWidth": 320}
+			]
+		});
+
+
+
+		for(var a_gene_link in gene_link_list){
+			$("#"+gene_link_list[a_gene_link]).button();
+			$("#"+gene_link_list[a_gene_link]).click(function() {
+                $('#spinner').show();
+				conn.emit('request_gene_data',this.id.split('_')[0],this.id.split('_')[1]);
+			});
+		}
+
+	}
+
+	function set_gene_db(gdb)
+	{
+        $('#spinner').hide();
+		$('#pchart').show();
+		$('#dbstats').show();
+		$('#explorer').show();
+
+		//gene_db = gdb;
+		$.extend(gene_db, gdb);
+
+		$("#gene_db_reload_button").attr({value:'Reload DB Library'});
+		$('#debug').html('<br>');
+        	
+		$("#explorer").html("Select a database below:<br>");
+		var db_index = 0
+		for (var db_lib in gene_db){
+			if (gene_db[db_lib]['gene_def'] != "UNDEFINED"){
+				console.log(db_lib);		
+				$('#explorer').append('<input id="load_'+db_lib+'" type="submit" value="'+db_lib+'" class= "ui-button-text">')
+				$('#load_'+db_lib).button();
+				$('#load_'+db_lib).click(function(){renderGeneDB(this.value);console.log(this);}); // Add a click handler
+
+			}
+		};
+		$("#explorer").addClass('ui-widget-header',2000);
+	}
+
+
+
+	function renderGeneDB(db_lib)
+	{
+		var gene_db_dimensions_array = new Array();
+		var gene_db_library_id = db_lib;
+
+
+		try{$('#pchart').accordion("destroy");}catch(err){};
+		$("#pchart").html("");
+		$("#dbstats").html("");
+		$("#debug").html("");
+		
+		gd = JSON.parse(gene_db[db_lib]['gene_def'])
+		$("#dbstats").append("<b>Database Summary</b> <br>");
+		$("#dbstats").append("Name: " +gd['name'] + "<br>");
+		$("#dbstats").append("Version: " +gd['version'] + "<br>");
+		$("#dbstats").append("Description: " +gd['description'] + "<br>");
+
+		bob_count = gene_db[db_lib]['gene_best'][0].length + gene_db[db_lib]['gene_best'][1].length + gene_db[db_lib]['gene_best'][2].length + gene_db[db_lib]['gene_best'][3].length
+		$("#dbstats").append("Best of the best count: " +bob_count + "<br>");
+		hs_count = gene_db[db_lib]['gene_high_scores'][0].length + gene_db[db_lib]['gene_high_scores'][1].length + gene_db[db_lib]['gene_high_scores'][2].length + gene_db[db_lib]['gene_high_scores'][3].length
+		$("#dbstats").append("High score pop. count: " +hs_count + "<br>");
+		$("#dbstats").append("Gene Def Hash: " +db_lib + "<br><br>");
+
+
+		if (gene_db[db_lib]['trade_enabled'] == 1){
+			//$("#dbstats").append("Trade Enable: " +gene_db[db_lib]['trade_enabled'] + "<br>");
+			$('#dbstats').append('<input id="trade_enable_toggle_button" name="trade_enable_toggle_button:'+db_lib+'" type="submit" value="Disable Trading" class= "ui-button-text">')
+		}else{
+			$('#dbstats').append('<input id="trade_enable_toggle_button" name="trade_enable_toggle_button:'+db_lib+'" type="submit" value="Enable Trading" class= "ui-button-text">')
+		}
+		$('#trade_enable_toggle_button').button();
+
+		$('#trade_enable_toggle_button').click(function(){
+			if (gene_db[this.name.split(':')[1]]['trade_enabled'] == 1){
+				conn.emit('set_trade_enable',0,this.name.split(':')[1]);
+				gene_db[this.name.split(':')[1]]['trade_enabled'] = 0;
+				this.value = 'Enable Trading';
+			}else{
+				conn.emit('set_trade_enable',1,this.name.split(':')[1]);
+				gene_db[this.name.split(':')[1]]['trade_enabled'] = 1;
+				this.value = 'Disable Trading';
+			}
+		});
+
+		$("#dbstats").append("<br>Trade Priority: ");
+		$("#dbstats").append('<select name="trade_priority:'+db_lib+'" id="trade_priority_select"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select>');
+		$("#dbstats option:eq("+gene_db[db_lib]['trade_priority']+")").attr('selected','selected');
+		$("#trade_priority_select").change(function(){
+			//alert(this.selectedIndex);
+			//alert(this.name.split(':')[1]);
+			conn.emit('set_trade_priority',this.selectedIndex,this.name.split(':')[1]);
+			gene_db[this.name.split(':')[1]]['trade_priority'] = this.selectedIndex;
+		});
+
+
+		//get the data dimensions
+		dim_array = new Array();
+		JSON.parse(gene_db[db_lib]['gene_def'])['call']['add_numvar'].forEach(function(item){	
+			dim_array.push(item[0]);
+			console.log(item);
+		});
+		dim_array.push('score');
+
+		//for each quartile
+		for (var i = 0; i < gene_db[db_lib]["gene_high_scores"].length; i++)
+		{
+            var gene_db_data_array = new Array();
+			//get the high scores
+			gene_db[db_lib]["gene_high_scores"][i].forEach(function (db_record)
+			{ 					
+				if (db_record["score"] > 0.0) //filter any scores below zero
+				{
+					gene_db_data_array.push(db_record); //data_array
+					ts = new Date(db_record['time'] * 1000);
+					//console.log(db_lib +' : '+ db_record['id']+' : '+ db_record['score']+' : '+ts+' : '+i);
+					$('#debug').append(db_lib +' : '+ db_record['id']+' : '+ db_record['score']+' : '+ts+' : '+i +'<br>');
+				}
+
+			});
+
+            gene_db[db_lib]["gene_best"][i].forEach(function (db_record)
+			{ 					
+				if (db_record["score"] > 0.0) //filter any scores below zero
+				{
+					gene_db_data_array.push(db_record); //data_array
+					ts = new Date(db_record['time'] * 1000);
+					//console.log(db_lib +' : '+ db_record['id']+' : '+ db_record['score']+' : '+ts+' : '+i);
+					$('#debug').append(db_lib +' : '+ db_record['id']+' : '+ db_record['score']+' : '+ts+' : '+i +'<br>');
+				}
+
+			})
+
+
+
+			//create the chart
+			if (gene_db_data_array.length > 0){
+				$("#pchart").append("<h3>Quartile: " +(i+1)+"</h3>");
+				$("#pchart").append('<div id="dpc_'+gene_db_library_id+'_'+i+'"><p id="pchart_'+gene_db_library_id+'_'+i+'" ></p>');
+	
+				c = new pcf();
+				c.setRenderTarget("#pchart_"+ gene_db_library_id+'_'+i);
+				//c.setStatsTarget("#dbstats");
+				c.setData(gene_db_data_array);
+				c.setDimensions(dim_array);
+				c.viewLegend(true);
+				//c.viewStats(true);
+				c.render();
+			}
+		}
+		$('#pchart').accordion({ collapsible: true });
+	}
+
+
+	function overlay()
+	{
+		$('#overlay').show();
+		
+	}
+
+
+
+	function updatePlot()
+	{
+		tab_selected = $('#tabs').tabs('option', 'selected');
+		plot.setData([ {data: getDepth(ask_depth,plot_x_center,spread),bars: { show: true,barWidth: 0.001 }},{data: getDepth(bid_depth,plot_x_center,spread),bars: { show: true,barWidth: 0.001 }}]);
+		plot.setupGrid()
+		if (tab_selected == 1){plot.draw();};
+	}
+
+	function requestDBLibInfo()
+	{
+		tab_selected = $('#tabs').tabs('option', 'selected');
+		if (tab_selected == 0){conn.emit('request_gene_db_stripped',{});};
+	}
+
+	function requestGeneServerMetrics()
+	{
+		tab_selected = $('#tabs').tabs('option', 'selected');
+		if (tab_selected == 5){conn.emit('request_gene_server_metrics',{});};
+	}
+
+	// periodic timers
+	setInterval(updatePlot, 500); //1/2 second interval
+	setInterval(requestDBLibInfo, 10000);
+	setInterval(requestGeneServerMetrics, 1000);
+
+
+	//UI events
+	$("#calc_button").click(function() {
+		var bits = Math.pow(2,parseInt($("#bits").val()));
+		var dec = 1.0 / Math.pow(10,parseInt($("#decimal").val()));
+		var offset = parseFloat($("#offset").val());
+        var multiplier = parseFloat($("#multiplier").val());
+		var mx = (((bits -  1) * dec) + offset) * multiplier;
+		$("#calc_result").html(
+			"<br>resolution: " + bits + ' values<BR>' +
+			"step size: " + (mx - (offset * multiplier)) / (bits - 1) + '<BR>' + 
+			"min value: " + offset * multiplier + '<BR>' + 
+			"max value: " + mx + '<BR>' 
+		);
+	});
+
+
+	$("#gene_db_reload_button").click(function() {
+        $('#spinner').show();
+		$("#gene_db_reload_button").attr({value:'Loading...'});
+  		conn.emit('request_gene_db',{});
+		try{$('#pchart').accordion("destroy");}catch(err){};
+		$("#pchart").html("");
+		$("#dbstats").html("");
+		$("#debug").html("");
+		$("#explorer").html("");
+		$('#dbstats').hide();
+		$('#explorer').hide();
+		$('#pchart').hide();
+
+	});
+
+
+
+</script>
+
+

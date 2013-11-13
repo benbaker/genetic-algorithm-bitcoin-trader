@@ -1,0 +1,10 @@
+This application requires node.js to be installed.
+
+Start the server by typing the following in a terminal: node server.js
+
+Open a browser to http://xxx.xxx.xxx.xxx:8088 with the hosted computers IP address or domain name.
+
+If the server is to be run on a remote machine the script must be configured:
+Open server.js and change the following IP address to match the server:
+
+rpcClient = xmlrpc.createClient({ host: '127.0.0.1', port: 9854, path: '/gene'});

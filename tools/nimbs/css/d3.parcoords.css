@@ -1,0 +1,29 @@
+.parcoords > svg, .parcoords > canvas { 
+  font: 12px sans-serif; 
+  position: absolute;
+  fill: #FBF604;
+}
+.parcoords > canvas {
+  pointer-events: none;
+}
+.parcoords rect.background {
+  fill: transparent;
+  fill: rgba(64,120,120,0.2);
+}
+.parcoords rect.background:hover {
+  fill: rgba(120,120,120,0.2);
+}
+.parcoords .resize rect {
+  fill: rgba(0,0,0,0.1);
+}
+.parcoords rect.extent {
+  fill: rgba(255,255,255,0.25);
+}
+.parcoords .axis line, .parcoords .axis path {
+  fill: none;
+  font: 12px sans-serif;
+  stroke: #FBF604;
+  shape-rendering: crispEdges;
+}
+
+

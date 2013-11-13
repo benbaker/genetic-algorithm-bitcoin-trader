@@ -1,0 +1,22 @@
+{
+	"set" :
+	{
+		"THIS CONFIG FILE IS NO LONGER USED...SEE: global_config.json" : 1,
+		"monitor_mode" : 0,
+		"bid_counter" : 0,
+		"bid_counter_trip" : 1,
+		"order_qty" : 1.0,
+		"commit_pct_to_target" : 0.75,
+		"sleep_state_seconds" : 60,
+		"buy_order_wait" : 90,
+		"min_bid_price" : 1.0,
+		"max_bid_price" : 20.00,
+		"enable_flash_crash_protection":1,
+		"flash_crash_protection_delay":180,
+		"enable_underbids" : 1,
+		"enable_text_messaging":1,
+		"config_loaded" : 1
+	}
+
+}
+

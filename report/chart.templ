@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Bitcoin Genetic AI Trade Strategy Chart</title>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/jquery.flot.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.min.js"></script>
+<style type="text/css"> 
+
+#metrics {
+font-size:0.8em;
+position:absolute;
+top:50px;
+right:0px;
+width:200px;
+}
+
+#orders {
+font-size:0.9em;
+position:absolute;
+top:1200px;
+left:50px;
+width:900px;
+}
+
+#placeholder {
+font-size:0.90em;
+}
+
+#placeholder .button {
+position: absolute;
+cursor: pointer;
+}
+
+#placeholder div.button {
+font-size:0.90em;
+color: #000000;
+background-color: #aa7777;
+padding: 2px;
+}
+
+.message {
+padding-left: 50px;
+font-size: smaller;
+}
+
+table.imgtbl th 
+{
+	background:#080808 url('/img/th.png');
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.90em;
+}
+
+table.imgtbl td.z
+{
+	background:#080808 url('/img/tr2.png');
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #999999;
+}
+
+table.imgtbl td.r 
+{
+	background:#080808 url('/img/r.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.y 
+{
+	background:#080808 url('/img/y.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.g
+{
+	background:#080808 url('/img/g.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.b
+{
+	background:#000000;
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+
+body
+{
+font-size:1.00em;
+background-color:#202020;
+color: #bfbfbf;
+}
+
+p
+{
+font-size:1.00em;
+background-color:#080808;
+color: #bfbfbf;
+}
+
+</style>
+</head>
+
+<body>
+<p><b>Bitcoin Genetic AI Trade Strategy Chart</b>
+|| <a href="../">System Monitor</a> 
+|| <a href="book.html">Order Book</a>
+|| <a href="gene_visualizer.html">Gene Visualizer</a> || Quartile Reports
+: <a href="chart_test_1.html">1</a> | <a href="chart_test_zoom_1.html">1 latest</a>
+| <a href="chart_test_2.html">2</a> | <a href="chart_test_zoom_2.html">2 latest</a>
+| <a href="chart_test_3.html">3</a> | <a href="chart_test_zoom_3.html">3 latest</a>
+| <a href="chart_test_4.html">4</a> | <a href="chart_test_zoom_4.html">4 latest</a>
+</p>
+Last Chart Update: {LAST_UPDATE}<br>
+
+
+	<div id="placeholder" style="width:1600px;height:900px;"></div>
+
+	<div id="metrics">
+	{METRICS_REPORT}
+	</div>
+
+	<div id="orders">
+	{ORDERS_REPORT}
+	</div>
+
+
+<p>
+Double click on chart to zoom. Click + drag to pan. <br>
+
+Position axis <button>left</button> or <button>right</button>.</p>
+
+<script type="text/javascript">
+var timer = setInterval("autoRefresh()", 1000 * 60 * 5);
+function autoRefresh(){self.location.reload(true);}
+
+
+var plot;
+
+$(function () {
+	var prices = {PRICES};
+	var wl = {WINDOW_LONG};
+	var ws = {WINDOW_SHORT};
+	var macd_pct = {MACD_PCT};
+	var buy = {BUY};
+	var sell = {SELL};
+	var stop = {STOP};
+	var net_worth = {NET_WORTH};
+	var trigger_price = {TRIGGER_PRICE};
+	var volatility_quartile = {VOLATILITY_QUARTILE};
+
+	function pctFormatter(v, axis) {return v.toFixed(axis.tickDecimals) +"%";}
+	function dollarFormatter(v, axis) {return "$" + v.toFixed(axis.tickDecimals);}
+    
+    function doPlot(position) {
+        plot = $.plot($("#placeholder"),
+           [ 
+		{ data: volatility_quartile, label: "Volitility Quartile", yaxis: 4 ,color: "#333333",lines: {show: true,fill: true,steps: true}},
+		{ data: net_worth, label: "NET Worth", yaxis: 3 ,color: "#678D2B"},
+		{ data: ws, label: "EMA Short", color: "#ED9355",yaxis: 1},
+		{ data: wl, label: "EMA Long", color: "#8DC7B8",yaxis: 1},
+		{ data: macd_pct, label: "MACD PCT", yaxis: 2 ,color: "#5C1E1B"},
+		{ data: prices, label: "Price",color: "#F7E4A2",yaxis: 1},
+		{ data: buy, label: "Buy Position", points: {show: true,radius:5,lineWidth: 5}, color: "#3480CC",yaxis: 1},
+		{ data: sell, label: "Sell Position", points: {show: true,radius:5,lineWidth: 5}, color: "rgb(97,173,47)",yaxis: 1},
+		{ data: stop, label: "Stop Position", points: {show: true,radius:5,lineWidth: 5}, color: "rgb(252,0,0)",yaxis: 1},
+		{ data: trigger_price, label: "Trigger Price", points: {show: true,radius:2,lineWidth: 1},color: "#0D3E73",yaxis: 1}
+		
+             ],
+           { 
+               xaxes: [ { mode: 'time', zoomRange: [1, null], panRange: [null,null]}],
+               yaxes: [ {  tickFormatter: dollarFormatter, zoomRange: [1, 5], panRange: [null, null]  },
+                        {
+                          // align if we are to the right
+                          //alignTicksWithAxis: position == "right" ? 1 : null,
+                          position: position,
+                          tickFormatter: pctFormatter,
+			zoomRange: [1, 2], panRange: [null, null]
+                        },
+			{
+                          // align if we are to the right
+                          alignTicksWithAxis: position == "right" ? 1 : null,
+                          position: position,
+                          tickFormatter: dollarFormatter,
+			zoomRange: false, panRange: [null, null]
+                        },
+			{
+                          // align if we are to the right
+                          alignTicksWithAxis: position == "right" ? 1 : null,
+                          position: position,
+                          tickFormatter: pctFormatter,
+			zoomRange: false, panRange: [null, null]
+                        }
+			 ],
+               legend: { position: 'sw' },
+
+		zoom: {
+		interactive: true
+		},
+		pan: {
+		interactive: true
+		},
+		grid: {
+		    show: true,
+		    aboveData: false,
+		    color: "rgb(0,180,0)",
+		    backgroundColor: "rgb(0,0,0)",
+		    borderWidth: 2,
+		    borderColor: "rgb(100,200,100)",
+		    autoHighlight: true,
+		    mouseActiveRadius: 3
+		  }
+           });
+    }
+
+    doPlot("right");
+
+ 	// add zoom out button 
+    $('<div class="button" style="left:50px;top:10px">zoom out</div>').appendTo(placeholder).click(function (e) {
+        e.preventDefault();
+        plot.zoomOut();
+    });
+
+    
+    $("button").click(function () {
+        doPlot($(this).text());
+    });
+});
+</script>
+ </body>
+</html>

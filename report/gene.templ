@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Bitcoin Genetic AI Gene Visualizer</title>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/jquery.flot.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.min.js"></script>
+<style type="text/css"> 
+
+#metrics {
+font-size:0.8em;
+position:absolute;
+top:50px;
+right:0px;
+width:350px;
+}
+
+#orders {
+font-size:0.9em;
+position:absolute;
+top:525px;
+left:50px;
+width:1400px;
+}
+
+#placeholder {
+font-size:0.90em;
+}
+
+#placeholder .button {
+position: absolute;
+cursor: pointer;
+}
+
+#placeholder div.button {
+font-size:0.90em;
+color: #000000;
+background-color: #aa7777;
+padding: 2px;
+}
+
+.message {
+padding-left: 50px;
+font-size: smaller;
+}
+
+table.imgtbl th 
+{
+	background:#080808 url('/img/th.png');
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.90em;
+}
+
+table.imgtbl td.z
+{
+	background:#080808 url('/img/tr2.png');
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #999999;
+}
+
+table.imgtbl td.r 
+{
+	background:#080808 url('/img/r.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.y 
+{
+	background:#080808 url('/img/y.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.g
+{
+	background:#080808 url('/img/g.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.b
+{
+	background:#000000;
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+
+body
+{
+font-size:1.00em;
+background-color:#202020;
+color: #bfbfbf;
+}
+
+p
+{
+font-size:1.00em;
+background-color:#080808;
+color: #bfbfbf;
+}
+
+</style>
+
+
+<script type="text/javascript">
+var timer = setInterval("autoRefresh()", 1000 * 60 * 5);
+function autoRefresh(){self.location.reload(true);}
+
+
+function drawGenes() {
+    	var q1 ={Q1};
+    	var q2 ={Q2};
+    	var q3 ={Q3};
+    	var q4 ={Q4};
+
+        var canvas = document.getElementById('canvas');
+
+
+	if (canvas.getContext){
+		var ctx = canvas.getContext('2d');
+		w = parseInt(document.getElementById('placeholder').style.width,10);
+		h = parseInt(document.getElementById('placeholder').style.height,10);
+
+		//Q1
+		for (var i=0; i < q1.length; i++)
+		{
+			
+			bh = h/(q1.length);
+			bw = (w/(q1[i].length)) / 4;
+			
+			//clamp to max height
+			if (bh > 3){bh = 3;}
+
+			for (var j=0; j < q1[i].length; j++)
+			{
+				
+				bx = bw * j;
+				by = bh * i;
+				if (q1[i][j] == "1")
+				{
+					ctx.fillStyle = "rgb(255,128,128)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+				else
+				{
+					ctx.fillStyle = "rgb(50,50,50)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+			}
+		}
+
+
+		//Q2
+		for (var i=0; i < q2.length; i++)
+		{
+			bh = h/(q2.length);
+			bw = (w/(q2[i].length)) / 4;
+			
+			//clamp to max height
+			if (bh > 3){bh = 3;}
+
+			for (var j=0; j < q2[i].length; j++)
+			{
+				
+				bx = (bw * j) + (w/4 * 1);
+				by = bh * i;
+				if (q2[i][j] == "1")
+				{
+					ctx.fillStyle = "rgb(128,255,128)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+				else
+				{
+					ctx.fillStyle = "rgb(50,50,50)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+			}
+		}
+
+		//Q3
+		for (var i=0; i < q3.length; i++)
+		{
+			bh = h/(q3.length);
+			bw = (w/(q3[i].length)) / 4;
+			
+			//clamp to max height
+			if (bh > 3){bh = 3;}
+
+			for (var j=0; j < q3[i].length; j++)
+			{
+				
+				bx = (bw * j) + (w/4 * 2);
+				by = bh * i;
+				if (q3[i][j] == "1")
+				{
+					ctx.fillStyle = "rgb(128,128,255)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+				else
+				{
+					ctx.fillStyle = "rgb(50,50,50)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+			}
+		}
+
+		//Q4
+		for (var i=0; i < q4.length; i++)
+		{
+			bh = h/(q4.length);
+			bw = (w/(q4[i].length)) / 4;
+			
+			//clamp to max height
+			if (bh > 3){bh = 3;}
+
+			for (var j=0; j < q4[i].length; j++)
+			{
+				
+				bx = (bw * j) + (w/4 * 3);
+				by = bh * i;
+				if (q4[i][j] == "1")
+				{
+					ctx.fillStyle = "rgb(128,190,190)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+				else
+				{
+					ctx.fillStyle = "rgb(50,50,50)";
+					ctx.fillRect(bx,by,bw-1,bh-1);
+				}
+			}
+		}
+
+  }
+
+}
+</script>
+
+</head>
+
+<body onload="drawGenes();">
+<p><b>Bitcoin Genetic AI Gene Visualizer</b>
+|| <a href="../">System Monitor</a> 
+|| <a href="book.html">Order Book</a>
+|| <a href="gene_visualizer.html">Gene Visualizer</a>
+|| Quartile Reports
+: <a href="chart_test_1.html">1</a> | <a href="chart_test_zoom_1.html">1 latest</a>
+| <a href="chart_test_2.html">2</a> | <a href="chart_test_zoom_2.html">2 latest</a>
+| <a href="chart_test_3.html">3</a> | <a href="chart_test_zoom_3.html">3 latest</a>
+| <a href="chart_test_4.html">4</a> | <a href="chart_test_zoom_4.html">4 latest</a>
+</p>
+Last Update: {LAST_UPDATE}
+<br><br>
+Binary visualization of the best of the best populations & high scoring genes submited to the server for each quartile.<br>
+Genes are ranked from low to high score. A three gene solid bar seperates the two populations with the best of the best population reported first.
+<br><br>
+<font color="#FF8080">Q1 </font>
+<font color="#80FF80">Q2 </font>
+<font color="#8080FF">Q3 </font>
+<font color="#80BEBE">Q4 </font>
+	<div id="placeholder" style="width:1000px;height:6000px;"><canvas id="canvas" width="1000" height="6000"></canvas>
+</div>
+
+
+ </body>
+</html>

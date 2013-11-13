@@ -1,0 +1,88 @@
+ *		{ margin: 1; padding: 1; }
+body		{ font-family: Georgia, serif; background: url(../img/body.png) #000000; color: #cec169;font-size: 12px; }
+text 		{ font-family: Georgia, serif; background: url(../img/body.png) #000000; color: #cec169;font-size: 12px; }
+
+.clear		{ clear: both; }
+
+form		{ width: 200px; margin: 50px auto 0; }
+
+legend		{ display: none; }
+
+fieldset	{ border: 5px solid color: #c77000;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; width: 260px; color: #c77000;;
+		}
+
+label		{ text-align: left; font-size: 12px;}
+
+input		{  font-size: 12px;
+			color: #CEC169; font-family: Georgia, serif;
+			border: 3px solid #999;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; background-color: #333733;
+		}
+
+input,select,textarea,option	{ color: #CEC169;background-color: #333733; }
+
+table,tr,td		{border: 5px solid color: #FFFFFF; background-color: #242423;}
+td			{padding-left:10px; padding-right:10px;}
+tr:nth-child(even) td 	{background-color:#242423;}
+tr:nth-child(odd) td 	{background-color:#2C2E2A;}
+
+
+.ui-input-label-text	{ background: url(../img/label.png) repeat-x top center; border: 2px solid #555555;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; font-size: 1em;}
+
+.ui-highlight-text	{ background: url(../img/highlight.png) repeat-x top center; border: 2px solid #555555;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; font-size: 1em;}
+
+.ui-error-text		{ background: url(../img/error.png) repeat-x top center; border: 2px solid #555555;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; font-size: 1em;}
+
+.ui-input-text	{ background: url(../img/button.png) repeat-x top center; border: 2px solid #c77000;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; font-size: 12px;  width: 80px; }
+					  
+.oui-button-text	{ background: url(../img/button.png) repeat-x top center; border: 2px solid #c77000;
+			-moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+			-webkit-border-radius: 5px; font-size: 1em;  width: 150px; }
+.oui-button-text:hover	{ background: url(../img/button_hover.png) repeat-x top center; color: white; }
+.oui-button-text:active	{ position: relative; top: 0px;border: 4px solid #999;padding: 3px;}
+
+.help			{ float:right; display: block; background: url(../img/help-icon.png); width: 46px;height: 46px;}
+.help:hover		{ float:right; display: block; background: url(../img/help-icon-hover.png); width: 46px;height: 46px;}
+
+.ui-overlay		{background: url(../img/overlay.png) no-repeat center center fixed;-webkit-background-size: cover; opacity: 1.0;
+        		-moz-background-size: cover; -o-background-size: cover; background-size: cover; 
+			background-color:#2C2E2A;width:99%;height:97%;position:absolute;top:0%;right:0%;opacity: 100%;z-index: 1000;border: 2px solid #000000;;
+			-moz-border-radius: 5px; padding: 5px; 
+			-webkit-border-radius: 5px; font-size: 12px;}
+
+.ui-overlay-content	{background-color:#000000;width:98%;height:92%;position:relative;top:0;right:0;opacity: 100%;z-index: 1001;border: 2px solid #000000;;
+			-moz-border-radius: 5px; padding: 5px;
+			-webkit-border-radius: 5px; font-size: 12px;overflow:auto;}
+
+
+#spinner        {position: absolute; top: -20px;right: 10px;}
+#title          {color: #c77000;font-size: 24px; padding: 10px;border: 2px solid #c77000;
+			-moz-border-radius: 5px; font-weight: bold;
+			-webkit-border-radius: 5px;background-color: #000000;}
+#notifications  {-moz-border-radius: 5px; padding: 1px; -webkit-border-radius: 5px;position:absolute;top:18;right:10;}
+#menu_buttons   {position:absolute;width:90px;top:1em;left:0em;}
+#explorer       {left:6em;top:2.5em;padding: 5px;border: 1px solid #000000;-moz-border-radius: 5px; -webkit-border-radius: 5px;}
+#dbstats       	{left:6em;padding: 5px;border: 1px solid #000000;-moz-border-radius: 5px; -webkit-border-radius: 5px;}
+#debug        	{white-space: pre-wrap;-moz-border-radius: 5px; padding: 5px; -webkit-border-radius: 5px;font-size: 12px;font-family: Courier New, monospace;}
+
+#mtgox_feed     {-moz-border-radius: 5px; padding: 5px; -webkit-border-radius: 5px;font-size: 16px;}
+
+#pids     	{-moz-border-radius: 5px; padding: 5px; -webkit-border-radius: 5px;font-size: 14px;}
+
+#gene_def_calc	{}
+#trades	{padding: 0px; font-weight: bold; -webkit-border-radius: 5px; font-size: 1em; display: block;}
+#ticker	{padding: 0px; font-weight: bold; -webkit-border-radius: 5px; font-size: 1em; display: block;}
+#depth	{padding: 0px; font-weight: bold; -webkit-border-radius: 5px; font-size: 1em; display: block;}
+
+#about-help 	{border: 5px solid color: #FFFFFF; background-color: #141413;}

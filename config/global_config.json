@@ -1,0 +1,55 @@
+{
+	"set" :
+	{
+		"SHARED_SECTION" : 1,
+		"max_length" : 75000,
+		"enable_flash_crash_protection" : 1,
+		"flash_crash_protection_delay" : 1240,
+		"price_format" : "%.5f",
+        "trusted_keys_path":"./config/trusted_keys/",
+        "datafeed_stale_after_n_seconds": 720,
+
+		"GTS_SECTION" : 1,
+		"load_throttle" : 1,
+		"load_throttle_sleep_interval" : 0.1,
+		"calibrate" : 1,
+		"cycle_time" : 60,
+		"min_cycle_time" : 30,
+		"cycle_time_step" : 2,
+		"pid_update_rate" : 90,
+
+		"BCBOOKIE_SECTION" : 1,
+		"monitor_mode" : 0,
+		"bid_counter" : 0,
+		"bid_counter_trip" : 1,
+		"order_qty" : 0.5,
+		"commit_pct_to_target" : 0.75,
+		"sleep_state_seconds" : 60,
+		"buy_order_wait" : 90,
+		"min_bid_price" : 1.0,
+		"max_bid_price" : 60.00,
+		"enable_underbids" : 1,
+		"enable_text_messaging":0,
+        "enable_constant_bid" : 1,
+        "constant_bid_discount" : 0.10,
+        "constant_bid_qty" : 3.666,
+
+		"REPORTGEN_SECTION" : 1,
+		"chart_zoom_periods" : 2500,
+		"chart_now_periods" : 800,
+		"win_loss_gate_pct" : 0.80,
+		"chart_type" : 1,
+
+		"GAL_SECTION" : 1,
+		"WATCHDOG_TIMEOUT" : 100,
+		"MONITORED_PROCESS_LAUNCH_TIMEOUT" : 120,
+		"GENE_SERVER_STDERR_FILE" : "./report/gene_server_error_log.txt",
+		"BCFEED_STDERR_FILE" : "/dev/null",
+		"WC_SERVER_STDERR_FILE" : "/dev/null",
+		"REPORT_GEN_STDERR_FILE" : "/dev/null",
+		"GTS_STDERR_FILE" : "./report/gts_error_log.txt",
+		"config_loaded" : 1
+	}
+
+}
+

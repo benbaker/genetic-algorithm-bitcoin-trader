@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Bitcoin Genetic AI Gene Visualizer</title>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/jquery.flot.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.min.js"></script>
+<style type="text/css"> 
+
+#metrics {
+font-size:0.8em;
+position:absolute;
+top:50px;
+right:0px;
+width:350px;
+}
+
+#orders {
+font-size:0.9em;
+position:absolute;
+top:525px;
+left:50px;
+width:1400px;
+}
+
+#placeholder {
+font-size:0.90em;
+}
+
+#placeholder .button {
+position: absolute;
+cursor: pointer;
+}
+
+#placeholder div.button {
+font-size:0.90em;
+color: #000000;
+background-color: #aa7777;
+padding: 2px;
+}
+
+.message {
+padding-left: 50px;
+font-size: smaller;
+}
+
+table.imgtbl th 
+{
+	background:#080808 url('/img/th.png');
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.90em;
+}
+
+table.imgtbl td.z
+{
+	background:#080808 url('/img/tr2.png');
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #999999;
+}
+
+table.imgtbl td.r 
+{
+	background:#080808 url('/img/r.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.y 
+{
+	background:#080808 url('/img/y.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.g
+{
+	background:#080808 url('/img/g.png');
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+table.imgtbl td.b
+{
+	background:#000000;
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #999999;
+	font-size:0.7em;
+}
+
+body
+{
+font-size:1.00em;
+background-color:#202020;
+color: #bfbfbf;
+}
+
+p
+{
+font-size:1.00em;
+background-color:#080808;
+color: #bfbfbf;
+}
+
+</style>
+
+
+<script type="text/javascript">
+var timer = setInterval("autoRefresh()", 1000 * 60 * 5);
+function autoRefresh(){self.location.reload(true);}
+</script>
+
+</head>
+
+<body>
+<p><b>Bitcoin Genetic AI  System Monitor </b> || 
+<a href="./"> System Monitor </a> ||
+<a href="./report/book.html"> Order Book </a> || <a href="./report/gene_visualizer.html">Gene Visualizer</a>
+|| Quartile Reports
+: <a href="./report/chart_test_1.html">1</a> | <a href="./report/chart_test_zoom_1.html">1 latest</a>
+| <a href="./report/chart_test_2.html">2</a> | <a href="./report/chart_test_zoom_2.html">2 latest</a>
+| <a href="./report/chart_test_3.html">3</a> | <a href="./report/chart_test_zoom_3.html">3 latest</a>
+| <a href="./report/chart_test_4.html">4</a> | <a href="./report/chart_test_zoom_4.html">4 latest</a>
+</p>
+Current System Time: {LAST_UPDATE}<br><br>
+{SYS_TRIGGER}<br>
+{SYS_CLIENTS}<br>
+{SYS_MONITOR}<br>
+{SYS_BEST_GENES}<br>
+</body>
+</html>
