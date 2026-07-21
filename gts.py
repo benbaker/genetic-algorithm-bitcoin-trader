@@ -229,8 +229,8 @@ if __name__ == "__main__":
     if gd.has_key('fitness_script'):
         #check for an updated signed package on the gene_server
         #pypy probably wont have pycrypto installed - fall back to python in a subprocess to sync
-        #fitness module names in the gene_def exclude the .py file extention 
-        #but signed packages use the extention. check for extention, if none exists then add .py
+        #fitness module names in the gene_def exclude the .py file extension 
+        #but signed packages use the extension. check for extension, if none exists then add .py
         print "gts: synchronizing signed code"        
         if len(gd['fitness_script'].split('.')) == 1:
             sync_filename = gd['fitness_script'] + '.py'
@@ -499,5 +499,3 @@ if __name__ == "__main__":
                     multicall()
             else:
                 print "gts: updating gene error: gene is missing!!"
-
-
